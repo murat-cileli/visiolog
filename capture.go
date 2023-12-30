@@ -12,7 +12,7 @@ import (
 func capture() {
 	img, err := screenshot.Capture(0, 0, displayBounds.Dx(), displayBounds.Dy())
 	catch(err)
-	captureDateTime := time.Now().Format("2006-01-02-15-04-05")
+	captureDateTime := time.Now().Format("2006-01-02_15-04-05")
 	captureFileName := saveScreenshot(img, captureDateTime)
 	insertToDatabase(captureDateTime, captureFileName, ocrFromScreenshot(img))
 }
