@@ -13,16 +13,16 @@ func capture() {
 	img, err := screenshot.Capture(0, 0, displayBounds.Dx(), displayBounds.Dy())
 	catch(err)
 	captureDateTime := time.Now().Format("2006-01-02-15-04-05")
-	imagePath := saveScreenshot(img, captureDateTime)
-	insertToDatabase(captureDateTime, imagePath, ocrFromScreenshot(img))
+	captureFileName := saveScreenshot(img, captureDateTime)
+	insertToDatabase(captureDateTime, captureFileName, ocrFromScreenshot(img))
 }
 
 func saveScreenshot(img *image.RGBA, fileName string) string {
-	imgPath := "fs/" + fileName + ".png"
+	imgPath := appDataDir + "/captures/" + fileName + ".png"
 	file, err := os.Create(imgPath)
 	catch(err)
 	defer file.Close()
 	catch(png.Encode(file, img))
 
-	return imgPath
+	return fileName
 }
