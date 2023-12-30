@@ -4,7 +4,7 @@ VisioLog is a free and open-source software designed to help users maintain a se
 
 > *Only **GNU/Linux** and **X11** are supported for now.*
 
-### Key Features
+## Key Features
 
 **Automated Screen Capture:**
 ScreenScribe captures screenshots at scheduled intervals, creating a chronological record of your screen activity.
@@ -24,14 +24,14 @@ All data, including screenshots and extracted text, is stored locally to priorit
 **Single Binary:**
 Single binary with zero dependencies.
 
-### Usage
+## Usage
 
-Start capturing from your terminal:
+Start capture daemon from your terminal:
 ```console
-[~]$ ./visiolog capture
+~$ ./visiolog capture
 ```
 
-Access you screen history with built-in GUI
+Access your screen history with built-in GUI
 ```console
-[~]$ ./visiolog gui
+~$ ./visiolog gui
 ```
