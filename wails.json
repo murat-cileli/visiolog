@@ -1,0 +1,10 @@
+{
+  "name": "visiolog",
+  "outputfilename": "visiolog",
+  "frontend:install": "",
+  "frontend:build": "",
+  "author": {
+    "name": "Murat Çileli",
+    "email": "murat.cileli@gmail.com"
+  }
+}

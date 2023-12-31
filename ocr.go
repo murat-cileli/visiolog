@@ -9,17 +9,19 @@ import (
 )
 
 func ocrFromScreenshot(img *image.RGBA) string {
-	client := gosseract.NewClient()
-	client.SetLanguage("eng", "tur")
-	defer client.Close()
+	gosseractClient := gosseract.NewClient()
+	gosseractClient.SetLanguage("eng")
+	defer gosseractClient.Close()
 
 	buffer := new(bytes.Buffer)
 	defer buffer.Reset()
 	catch(png.Encode(buffer, img))
-	catch(client.SetImageFromBytes(buffer.Bytes()))
+	catch(gosseractClient.SetImageFromBytes(buffer.Bytes()))
 
-	text, err := client.Text()
+	hOcrText, err := gosseractClient.HOCRText()
 	catch(err)
 
-	return text
+	img = nil
+
+	return hOcrText
 }

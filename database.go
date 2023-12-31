@@ -24,8 +24,7 @@ func createDatabaseIfNotExists() {
 			capture_resolution TEXT NOT NULL,
 			capture_interval INTEGER DEFAULT 0 NOT NULL,
 			session_uuid TEXT NOT NULL,
-			ocr_text TEXT,
-			ocr_bounds TEXT
+			hocr_text TEXT
 			);
 		`
 		_, err = db.Exec(sqlStmt)
@@ -40,10 +39,10 @@ func openDatabase() *sql.DB {
 	return db
 }
 
-func insertToDatabase(captureDateTime string, captureFileName string, ocrText string) {
-	statement, err := db.Prepare("INSERT INTO captures (capture_date_time, capture_file, capture_resolution, capture_interval, session_uuid, ocr_text, ocr_bounds) VALUES(?, ?, ?, ?, ?, ?, ?);")
+func insertToDatabase(captureDateTime string, captureFileName string, hOcrText string) {
+	statement, err := db.Prepare("INSERT INTO captures (capture_date_time, capture_file, capture_resolution, capture_interval, session_uuid, hocr_text) VALUES(?, ?, ?, ?, ?, ?);")
 	catch(err)
 	defer statement.Close()
-	_, err = statement.Exec(captureDateTime, captureFileName+".png", displayBounds.String(), captureInterval, sessionUuid, ocrText, nil)
+	_, err = statement.Exec(captureDateTime, captureFileName+".png", displayBounds.String(), captureInterval, sessionUuid, hOcrText)
 	catch(err)
 }

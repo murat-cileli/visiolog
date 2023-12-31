@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"errors"
 	"image"
 	"image/png"
 	"os"
@@ -10,6 +10,17 @@ import (
 
 	"github.com/kbinani/screenshot"
 )
+
+func startCapture() {
+	if screenshot.NumActiveDisplays() <= 0 {
+		catch(errors.New("No active display found."))
+	}
+
+	for {
+		go capture()
+		time.Sleep(captureInterval * time.Second)
+	}
+}
 
 func capture() {
 	img, err := screenshot.Capture(0, 0, displayBounds.Dx(), displayBounds.Dy())
@@ -22,7 +33,6 @@ func capture() {
 func saveScreenshot(img *image.RGBA, fileName string) string {
 	imgPath := getCaptureSubDirsFromCaptureFileName(fileName)
 	imgPath = filepath.Join(imgPath, fileName+".png")
-	fmt.Println(imgPath)
 	file, err := os.Create(imgPath)
 	catch(err)
 	defer file.Close()
