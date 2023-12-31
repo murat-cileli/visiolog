@@ -8,7 +8,9 @@ import (
 	"github.com/otiai10/gosseract/v2"
 )
 
-func ocrFromScreenshot(img *image.RGBA) string {
+type ocrType struct{}
+
+func (ocr *ocrType) getHocrText(img *image.RGBA) string {
 	gosseractClient := gosseract.NewClient()
 	gosseractClient.SetLanguage("eng")
 	defer gosseractClient.Close()

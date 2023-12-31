@@ -38,11 +38,3 @@ func openDatabase() *sql.DB {
 	catch(err)
 	return db
 }
-
-func insertToDatabase(captureDateTime string, captureFileName string, hOcrText string) {
-	statement, err := db.Prepare("INSERT INTO captures (capture_date_time, capture_file, capture_resolution, capture_interval, session_uuid, hocr_text) VALUES(?, ?, ?, ?, ?, ?);")
-	catch(err)
-	defer statement.Close()
-	_, err = statement.Exec(captureDateTime, captureFileName+".png", displayBounds.String(), captureInterval, sessionUuid, hOcrText)
-	catch(err)
-}

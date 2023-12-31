@@ -33,5 +33,5 @@ Start capture daemon from your terminal:
 
 Access your screen history with built-in GUI
 ```console
-~$ ./visiolog gui
+~$ ./visiolog
 ```

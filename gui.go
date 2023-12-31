@@ -46,7 +46,7 @@ func (a *App) Greet(name string) string {
 	return fmt.Sprintf("Hello %s, It's show time!", name)
 }
 
-func startGui() {
+func (a *App) start() {
 	// Create an instance of the app structure
 	app := NewApp()
 

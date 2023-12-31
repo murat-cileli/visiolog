@@ -14,15 +14,17 @@ var displayBounds image.Rectangle = screenshot.GetDisplayBounds(0)
 var sessionUuid string = uuid.New().String()
 var appDataDir string = getAppDataDir()
 var db *sql.DB = openDatabase()
+var capture captureType
+var gui App
 
 const captureInterval = 3
 
 func main() {
 	switch {
 	case len(os.Args) == 1:
-		startGui()
+		gui.start()
 	case os.Args[1] == "capture":
-		startCapture()
+		capture.start(captureInterval)
 	default:
 		catch(errors.New("Invalid argument."))
 	}
