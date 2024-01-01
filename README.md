@@ -45,7 +45,7 @@ Capture interval in seconds.
 OCR language(s). Multiple language codes can be specified, separated by comma. For list of language codes, see https://tesseract-ocr.github.io/tessdoc/Data-Files-in-different-versions.html  
 (Default "eng")
 
-### Usage: User Interface
+## Usage: User Interface
 
 Access your screen history with built-in GUI
 ```console
