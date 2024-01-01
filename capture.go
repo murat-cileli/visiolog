@@ -6,27 +6,33 @@ import (
 	"image/png"
 	"os"
 	"path/filepath"
+	"strconv"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/kbinani/screenshot"
 )
 
 var ocr ocrType
 
 type metaType struct {
-	dateTime time.Time
-	fileName string
-	hOcrText string
-	ocrText  string
+	dateTime    time.Time
+	fileName    string
+	hOcrText    string
+	ocrText     string
+	resolution  string
+	sessionUuid string
 }
 
 type captureType struct {
-	image *image.RGBA
-	meta  metaType
+	image  *image.RGBA
+	width  int
+	height int
+	meta   metaType
 }
 
 type captureOptionsType struct {
-	interval     int
+	interval     uint
 	ocrLanguages string
 }
 
@@ -35,15 +41,24 @@ func (capture *captureType) start() {
 		catch(errors.New("No active display found."))
 	}
 
+	displayBounds := screenshot.GetDisplayBounds(0)
+	capture.width = displayBounds.Dx()
+	capture.height = displayBounds.Dy()
+
+	capture.meta.resolution = strconv.Itoa(capture.width) + "x" + strconv.Itoa(capture.height)
+	capture.meta.sessionUuid = uuid.New().String()
+
+	intervalDuration := time.Duration(captureOptions.interval) * time.Second
+
 	for {
 		go capture.capture()
-		time.Sleep(time.Duration(captureOptions.interval) * time.Second)
+		time.Sleep(intervalDuration)
 	}
 }
 
 func (capture *captureType) capture() {
 	var err error
-	capture.image, err = screenshot.Capture(0, 0, displayBounds.Dx(), displayBounds.Dy())
+	capture.image, err = screenshot.Capture(0, 0, capture.width, capture.height)
 	catch(err)
 	capture.meta.dateTime = time.Now()
 	capture.meta.hOcrText = ocr.getHocrText(capture.image)
@@ -65,6 +80,6 @@ func (capture *captureType) saveToDatabase() {
 	statement, err := db.Prepare("INSERT INTO captures (capture_date_time, capture_file, capture_resolution, capture_interval, session_uuid, hocr_text) VALUES(?, ?, ?, ?, ?, ?);")
 	catch(err)
 	defer statement.Close()
-	_, err = statement.Exec(capture.meta.dateTime, capture.meta.fileName, displayBounds.String(), captureOptions.interval, sessionUuid, capture.meta.hOcrText)
+	_, err = statement.Exec(capture.meta.dateTime, capture.meta.fileName, capture.meta.resolution, captureOptions.interval, capture.meta.sessionUuid, capture.meta.hOcrText)
 	catch(err)
 }
