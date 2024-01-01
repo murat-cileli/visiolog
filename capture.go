@@ -25,14 +25,19 @@ type captureType struct {
 	meta  metaType
 }
 
-func (capture *captureType) start(interval time.Duration) {
+type captureOptionsType struct {
+	interval     int
+	ocrLanguages string
+}
+
+func (capture *captureType) start() {
 	if screenshot.NumActiveDisplays() <= 0 {
 		catch(errors.New("No active display found."))
 	}
 
 	for {
 		go capture.capture()
-		time.Sleep(interval * time.Second)
+		time.Sleep(time.Duration(captureOptions.interval) * time.Second)
 	}
 }
 
@@ -60,6 +65,6 @@ func (capture *captureType) saveToDatabase() {
 	statement, err := db.Prepare("INSERT INTO captures (capture_date_time, capture_file, capture_resolution, capture_interval, session_uuid, hocr_text) VALUES(?, ?, ?, ?, ?, ?);")
 	catch(err)
 	defer statement.Close()
-	_, err = statement.Exec(capture.meta.dateTime, capture.meta.fileName, displayBounds.String(), captureInterval, sessionUuid, capture.meta.hOcrText)
+	_, err = statement.Exec(capture.meta.dateTime, capture.meta.fileName, displayBounds.String(), captureOptions.interval, sessionUuid, capture.meta.hOcrText)
 	catch(err)
 }

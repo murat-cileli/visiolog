@@ -2,7 +2,7 @@ package main
 
 import (
 	"database/sql"
-	"errors"
+	"flag"
 	"image"
 	"os"
 
@@ -15,17 +15,22 @@ var sessionUuid string = uuid.New().String()
 var appDataDir string = getAppDataDir()
 var db *sql.DB = openDatabase()
 var capture captureType
+var captureOptions captureOptionsType
 var gui App
 
-const captureInterval = 3
-
 func main() {
-	switch {
-	case len(os.Args) == 1:
+	if len(os.Args) == 1 {
 		gui.start()
-	case os.Args[1] == "capture":
-		capture.start(captureInterval)
-	default:
-		catch(errors.New("Invalid argument."))
+	} else {
+		isCaptureFlagSet := flag.Bool("capture", false, "Start capture mode.")
+		flag.IntVar(&captureOptions.interval, "interval", 5, "Capture interval in seconds.")
+		flag.StringVar(&captureOptions.ocrLanguages, "ocr-languages", "eng", "OCR language(s). Multiple language codes can be specified, separated by comma. For list of language codes, see https://tesseract-ocr.github.io/tessdoc/Data-Files-in-different-versions.html")
+		flag.Parse()
+		if *isCaptureFlagSet {
+			capture.start()
+		} else {
+			flag.PrintDefaults()
+		}
 	}
+
 }

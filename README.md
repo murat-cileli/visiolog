@@ -24,14 +24,30 @@ All data, including screenshots and extracted text, is stored locally to priorit
 **Single Binary:**
 Single binary with zero dependencies.
 
-## Usage
+## Usage: Capture Mode
 
 Start capture daemon from your terminal:
 ```console
-~$ ./visiolog capture
+$ ./visiolog --capture
 ```
+
+Capture mode takes optional arguments:
+
+```console
+--interval
+```
+Capture interval in seconds.  
+(Default: 5)
+
+```
+--ocr-languages
+```
+OCR language(s). Multiple language codes can be specified, separated by comma. For list of language codes, see https://tesseract-ocr.github.io/tessdoc/Data-Files-in-different-versions.html  
+(Default "eng")
+
+### Usage: User Interface
 
 Access your screen history with built-in GUI
 ```console
-~$ ./visiolog
+$ ./visiolog
 ```

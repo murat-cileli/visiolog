@@ -53,10 +53,10 @@ func (a *App) start() {
 	// Create application with options
 	err := wails.Run(&options.App{
 		Title:             "VisioLog GUI",
-		Width:             1024,
-		Height:            768,
-		MinWidth:          1024,
-		MinHeight:         768,
+		Width:             1280,
+		Height:            720,
+		MinWidth:          640,
+		MinHeight:         480,
 		DisableResize:     false,
 		Fullscreen:        false,
 		Frameless:         false,

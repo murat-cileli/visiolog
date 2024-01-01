@@ -12,7 +12,7 @@ type ocrType struct{}
 
 func (ocr *ocrType) getHocrText(img *image.RGBA) string {
 	gosseractClient := gosseract.NewClient()
-	gosseractClient.SetLanguage("eng")
+	gosseractClient.SetLanguage(captureOptions.ocrLanguages) // TODO
 	defer gosseractClient.Close()
 
 	buffer := new(bytes.Buffer)
@@ -22,8 +22,6 @@ func (ocr *ocrType) getHocrText(img *image.RGBA) string {
 
 	hOcrText, err := gosseractClient.HOCRText()
 	catch(err)
-
-	img = nil
 
 	return hOcrText
 }
