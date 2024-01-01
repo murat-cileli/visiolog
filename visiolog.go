@@ -1,18 +1,19 @@
 package main
 
 import (
-	"database/sql"
 	"flag"
 	"os"
 )
 
-var appDataDir string = getAppDataDir()
-var db *sql.DB = openDatabase()
+var helper helperType
+var database databaseType
 var capture captureType
 var captureOptions captureOptionsType
 var gui App
 
 func main() {
+	helper.initFileSystem()
+	database.initDatabase()
 	if len(os.Args) == 1 {
 		gui.start()
 	} else {

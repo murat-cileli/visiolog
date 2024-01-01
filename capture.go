@@ -38,7 +38,7 @@ type captureOptionsType struct {
 
 func (capture *captureType) start() {
 	if screenshot.NumActiveDisplays() <= 0 {
-		catch(errors.New("No active display found."))
+		helper.catch(errors.New("No active display found."))
 	}
 
 	displayBounds := screenshot.GetDisplayBounds(0)
@@ -59,27 +59,27 @@ func (capture *captureType) start() {
 func (capture *captureType) capture() {
 	var err error
 	capture.image, err = screenshot.Capture(0, 0, capture.width, capture.height)
-	catch(err)
+	helper.catch(err)
 	capture.meta.dateTime = time.Now()
-	capture.meta.hOcrText = ocr.getHocrText(capture.image)
+	capture.meta.hOcrText = ocr.getHocrText()
 	capture.saveToFile()
 	capture.saveToDatabase()
 }
 
 func (capture *captureType) saveToFile() {
 	capture.meta.fileName = capture.meta.dateTime.Format("2006-01-02-15-04-05") + ".png"
-	imgPath := getCaptureSubDirsFromCaptureFileName(capture.meta.fileName)
+	imgPath := helper.getCaptureSubDirs(capture.meta.fileName)
 	imgPath = filepath.Join(imgPath, capture.meta.fileName)
 	file, err := os.Create(imgPath)
-	catch(err)
+	helper.catch(err)
 	defer file.Close()
-	catch(png.Encode(file, capture.image))
+	helper.catch(png.Encode(file, capture.image))
 }
 
 func (capture *captureType) saveToDatabase() {
-	statement, err := db.Prepare("INSERT INTO captures (capture_date_time, capture_file, capture_resolution, capture_interval, session_uuid, hocr_text) VALUES(?, ?, ?, ?, ?, ?);")
-	catch(err)
+	statement, err := database.connection.Prepare("INSERT INTO captures (capture_date_time, capture_file, capture_resolution, capture_interval, session_uuid, hocr_text) VALUES(?, ?, ?, ?, ?, ?);")
+	helper.catch(err)
 	defer statement.Close()
 	_, err = statement.Exec(capture.meta.dateTime, capture.meta.fileName, capture.meta.resolution, captureOptions.interval, capture.meta.sessionUuid, capture.meta.hOcrText)
-	catch(err)
+	helper.catch(err)
 }

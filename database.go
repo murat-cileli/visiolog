@@ -8,13 +8,18 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-func createDatabaseIfNotExists() {
-	if _, err := os.Stat(filepath.Join(appDataDir, "visiolog.db")); os.IsNotExist(err) {
-		_, err := os.Create(filepath.Join(appDataDir, "visiolog.db"))
-		catch(err)
-		db, err := sql.Open("sqlite3", filepath.Join(appDataDir, "visiolog.db"))
-		catch(err)
-		defer db.Close()
+type databaseType struct {
+	connection *sql.DB
+	filePath   string
+}
+
+func (database *databaseType) createDatabaseIfNotExists() {
+	if _, err := os.Stat(database.filePath); os.IsNotExist(err) {
+		_, err := os.Create(database.filePath)
+		helper.catch(err)
+		database.connection, err = sql.Open("sqlite3", database.filePath)
+		helper.catch(err)
+		defer database.connection.Close()
 
 		sqlStmt := `
 			CREATE TABLE captures (
@@ -27,14 +32,15 @@ func createDatabaseIfNotExists() {
 			hocr_text TEXT
 			);
 		`
-		_, err = db.Exec(sqlStmt)
-		catch(err)
+		_, err = database.connection.Exec(sqlStmt)
+		helper.catch(err)
 	}
 }
 
-func openDatabase() *sql.DB {
-	createDatabaseIfNotExists()
-	db, err := sql.Open("sqlite3", filepath.Join(appDataDir, "visiolog.db"))
-	catch(err)
-	return db
+func (database *databaseType) initDatabase() {
+	database.filePath = filepath.Join(helper.appDataDir, "visiolog.db")
+	database.createDatabaseIfNotExists()
+	var err error
+	database.connection, err = sql.Open("sqlite3", database.filePath)
+	helper.catch(err)
 }
